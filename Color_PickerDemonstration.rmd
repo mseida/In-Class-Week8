@@ -1,0 +1,73 @@
+---
+title: "Demonstration"
+output: html_notebook
+---
+
+First, lets load the package into R!
+```{r}
+install.packages("colourpicker")
+library(colourpicker)
+```
+**Now, what are the functions of "colourpicker"?**
+
+* **colourInput:** 
+    + Creates a color input widget such that users to pick colors in an R Shiny app.  
+* **updateColourInput:**
+    + Allows R Shiny user to change colourInput settings
+* **colourWidget:** 
+    + Creates a color input widget for html documents
+* **colourPicker:** 
+    + Gadget that allows an RStudio user to easily pick and find colors in R.
+* **plotHelper:**
+    + Gadget that allows an RStudio user to directly try out different color combinations for a plot.   
+* **runExample:**
+    + Allows user to see example widgets
+    
+**Okay, which ones do we care about? "colourInput," "colourPicker," and "plotHelper"? Okay!**
+
+**First, let's start with colourInput.** Actually, let's first discuss what the "shiny" package is:
+```{r}
+if (interactive()) {
+runExample()
+}
+```
+
+Okay...where does "colourInput" fit into all of this?
+```{r}
+colourInput(inputId, label, value = color, showColour = c("both", "text", "background"), palette = c("square", "limited"), allowedCols = NULL, allowTransparent = FALSE, returnName = FALSE)
+```
+Here's an example of what it looks like: 
+https://daattali.com/shiny/colourInput/
+
+Wow...that's a little too complex for our class! What's something in this package a novice like I can use?
+
+**How about "colourPicker"?**
+Let's see what's in our Addins menu...
+```{r}
+if (interactive()) {
+cols <- colourPicker()
+}
+```
+...Oooh! Nice!
+
+**What about plotHelper**?
+Again, let's see what's in our Addins menu...Ah! okay. Let's try some code of our own:
+```{r}
+library(tidyverse)
+library(utf8)
+anti<-read.csv("yup.csv", check.names = F)
+anti=mutate(anti, avg=(pen+strep+neo)/3)
+anti=arrange(anti, avg)
+
+ggplot(data=anti) +
+  geom_point(size=3, mapping = aes(x=strep, y=reorder(abbr, -avg), shape = gram, color="Streptom"), position = position_nudge(x = 0.04)) +
+  geom_point(size=3, mapping = aes(x=pen, y=reorder(abbr, -avg), shape = gram, color="Penicilin")) +
+  geom_point(size=3, mapping = aes(x=neo, y=reorder(abbr, -avg), shape = gram, color="Neomycin")) +
+  scale_x_continuous(trans='log10') +
+  scale_color_manual(values=c("Streptom"="orange", "Penicilin"="blue", "Neomycin"="violetred3")) +
+  scale_shape_manual(values=c(17,16)) +
+  labs(title="Burtin's Bacteria", x = "Minimum Inhibitory Concentration (MIC)", y = "Bacteria", color =
+  "Antibiotics", shape= "Gram Staining") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+

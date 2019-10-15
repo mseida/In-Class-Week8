@@ -1,0 +1,61 @@
+---
+title: "Bio3D Demonstration"
+output: html_notebook
+---
+##Installing Bio3D
+To begin, we will need to run this command to download the Bio3D package and load the Bio3D library.
+```{r}
+#install.packages("bio3D") 
+library(bio3d)
+```
+
+##Background
+In bioinformatics, sequence alignment is a way of arranging DNA, RNA, or protein sequences in order to identify regions of similarity that are explained by the functional, structural, or evolutionary relationships between the sequences.
+
+##Reading and Manipulation of Protein Database Files
+For this demo, we will be using the PDB file `"4q21"` PDB files contain a list of all the atoms of one or more molecular structure. Each atom position is defined by its x,y,z coordinates. We will store this file as an object and print it to screen using the follwing command:
+```{r}
+pdb <- read.pdb("4q21") #pdb stands for protein database
+pdb #prints summary to screen
+```
+We will be focusing on using the attributes of this file that are listed in the bottom two lines.
+
+Next, we will use the `atom.select()` function. The Bio3D `atom.select()` function is central to PDB structure manipulation and analysis. It operates on PDB structure objects and returns the numeric indices of the selected atom subset. These indices can be used to access the `$atom` and `$xyz` attributes of PDB structure related objects.
+
+For example to select the indices for all C-alpha atoms, we can use the following command:
+
+```{r}
+ca.inds <- atom.select(pdb, "calpha") #pulls the c-alpha atoms 
+ca.inds #prints to screen
+```
+
+From the last command, the attributes that returned were both `atom` and `xyz` components as they are numerical vectors that can be used to access the corresponding atom and xyz components of the input PDB structure object.
+
+For example, we will use the following command to access these individual attributes:
+```{r}
+head( pdb$atom[ca.inds$atom, ] ) #Prints the details of the first few atoms
+```
+If we only wanted to access only the xyz coordinates in the c-alpha atoms of the PDB file, then we would use the following command:
+```{r}
+head( pdb$xyz[, ca.inds$xyz] ) #takes the first few atoms, from the object we made pdb, this command is pulling the xyz values from only the c-alpha atoms
+```
+
+With these such selections, various individual atom properties can be explored. 
+
+###Question:
+Say we want to extract the amino acid sequence of your structure in 3-letter and 1-letter forms, how would we do that using the `atom.select()` function?
+
+First we want to select the C-alpha atoms and use those returned indices to access the `resid` values of `pdb$atom`
+
+We can do this by running the following command:
+```{r}
+aa3 <- pdb$atom$resid[ atom.select(pdb, "calpha")$atom ] #aa3 stands for amino acid 3-letter. This line is taking the atom indices and only showing values from the "resid" column. 
+head(aa3) #this line prints the values of the first few atoms to screen
+```
+After doing this, we then use the utility function of `aa321` to convert to 1-letter form.
+```{r}
+aa321(aa3) #prints all the amino acids in their one letter form 
+```
+
+In conclusion, by using the Bio3D function of `atom.select` we are able to evaluate, explore, and analyze different aspects of biomolecular coordinate data. Anything we pull out from a PDB file can be stored as an object to eventually be used for comparison or a quick summary of an atom. This function is the basis to making alignments and analyzing data. 
+

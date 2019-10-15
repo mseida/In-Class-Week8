@@ -1,0 +1,24 @@
+---
+title: "BCRA Exercise"
+output: html_notebook
+---
+
+Find the absolute risk and relative risk of the individuals under the data set: exampledata.   
+Hints: 
+The functions take the form 
+`relative.risk(data, Raw_Ind=1)` and `absolute.risk(data, Raw_Ind=1, Avg_White=0)`
+
+```{r eval=FALSE}
+# load the package
+library(BCRA)
+# load the data
+data(__)
+# for the sole purpose of seeing what the data looks like
+head(__)
+# calculate absolute risk
+absolute.risk(__, __, __)
+# calculate relative risk
+relative.risk(__, __)
+```
+
+
